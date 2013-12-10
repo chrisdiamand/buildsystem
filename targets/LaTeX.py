@@ -1,3 +1,5 @@
+import os
+
 class Target: # LaTeX
     def __init__(self, src):
         assert type(src) == str

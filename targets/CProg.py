@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 C_COMPILER = "clang"

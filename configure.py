@@ -27,6 +27,21 @@ class BuildTarget:
         self.write_rule = self.module_globals["write_rule"]
         self.decl_class = self.module_globals["Target"]
 
+# Look through the targets/ directory for scripts defining
+# target types. Return an array of BuildTarget instances.
+def load_target_types(project_globals):
+    ret = []
+    script_loc = os.path.realpath(sys.argv[0])
+    script_loc = os.path.dirname(script_loc)
+    targets_dir = os.path.join(script_loc, "targets")
+    for target in os.listdir(targets_dir):
+        script = os.path.join(targets_dir, target)
+        if os.path.splitext(script)[1] != ".py":
+            continue
+        bt = BuildTarget(script)
+        project_globals[bt.modulename] = bt.decl_class
+        ret.append(bt)
+    return ret
 
 class Makefile:
     def __init__(self, jars):
@@ -42,9 +57,6 @@ class Makefile:
         outfile.write(".PHONY: everything\n")
         outfile.write("everything: " + jartargets + "\n\n")
 
-        LaTeX.write_rule(outfile)
-        self.write_c_rule(outfile)
-
         # Make sure the build directory exists
         outfile.write(builddir + ":\n")
         outfile.write("\t@mkdir -p " + builddir + "\n\n")
@@ -55,14 +67,15 @@ class Makefile:
         outfile.write("\t@rm -Rf $(REMOVE_FILES) "
                       + builddir + "\n");
 
-# Load the project definition from 'project.py'.
-project_globals = {
-    "CProg"     :   CProg,
-    "LaTeX"     :   LaTeX,
-    "Jar"       :   Jar,
-    "Makefile"  :   Makefile,
-    "Package"   :   Package }
+# Set up a namespace containing classes 'project.py' can use
+# to define Makefiles
+project_globals = {"Makefile":   Makefile}
 
+# Load the target definition scripts and add their classes
+# into the project.py namespace
+target_types = load_target_types(project_globals)
+
+# Load the project definition from 'project.py'.
 try:
     execfile("project.py", project_globals)
 except IOError as e:
@@ -74,4 +87,9 @@ makefile = project_globals["makefile"]
 # Generate the Makefile.
 outfile = open("Makefile", "w")
 makefile.gen(outfile)
+
+for bt in target_types:
+    if bt.write_rule != None:
+        bt.write_rule(outfile)
+
 outfile.close()
