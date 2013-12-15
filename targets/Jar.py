@@ -2,7 +2,7 @@ import javadep
 import os
 
 class Target: # Jar
-    def __init__(self, name, mainclass, packages):
+    def __init__(self, name, mainclass, packages, cp = []):
         assert(type(name) == str)
         assert(type(mainclass) == str)
         assert(type(packages) == list)
@@ -11,6 +11,7 @@ class Target: # Jar
         self.jarname = name + ".jar"
         self.mainclass = mainclass
         self.packages = packages
+        self.classpath = cp
         self.manifest = os.path.join(builddir, "manifest_" + self.name + ".txt")
 
     def writeManifestRule(self, fp):
@@ -19,7 +20,12 @@ class Target: # Jar
                 + self.manifest + "\n")
         fp.write("\t@echo \'Main-Class: " + self.mainclass + "\' >> "
                 + self.manifest + "\n")
-        #fp.write("Class-Path: ...\n")
+        if self.classpath != []:
+            fp.write("\t@echo \'Class-Path:")
+            for i in self.classpath:
+                assert type(i) == str
+                fp.write(" " + i)
+            fp.write("\' >> " + self.manifest + "\n")
         #fp.write("\techo \'\' >> " + self.manifest + "\n")
         fp.write("\n")
 
