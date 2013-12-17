@@ -2,14 +2,15 @@ import os
 import subprocess
 
 C_COMPILER = "clang"
-CFLAGS = "-Wall -pedantic -g"
 CPP_COMPILER = "clang"
-CCFLAGS = CFLAGS
 
 def to_c_obj(fname):
     return os.path.join(builddir, os.path.splitext(fname)[0] + ".o")
 
 class Target: # CProg
+    CFLAGS = "-Wall -pedantic -g"
+    CCFLAGS = CFLAGS
+
     def __init__(self, name, sources):
         assert type(name) == str
         assert type(sources) == list
@@ -49,8 +50,8 @@ class Target: # CProg
 def write_rule(fp):
     fp.write("CC = " + C_COMPILER + "\n")
     fp.write("CPP = " + CPP_COMPILER + "\n")
-    fp.write("CFLAGS = " + CFLAGS + "\n")
-    fp.write("CCFLAGS = " + CCFLAGS + "\n\n")
+    fp.write("CFLAGS = " + Target.CFLAGS + "\n")
+    fp.write("CCFLAGS = " + Target.CCFLAGS + "\n\n")
 
     fp.write(os.path.join(builddir, "%.o: %.c | " + builddir + "\n"))
     fp.write("\t@echo CC $<\n")
