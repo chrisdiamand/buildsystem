@@ -47,6 +47,8 @@ def getOtherClassesInPackage(fname):
         print "Error: Not a Java source file:", fname
         sys.exit(1)
     dirname = os.path.dirname(fname)
+    if len(dirname) == 0: # Current directory
+        dirname = "."
     classes = []
     for i in os.listdir(dirname):
         [classname, ext] = os.path.splitext(i)
@@ -59,6 +61,8 @@ def getOtherClassesInPackage(fname):
 def getPackageDeps(lines, classes, package):
     deps = []
     regexps = []
+    if len(package) != 0:
+        package = package + "."
     for cl in classes:
         regexp = re.compile(r"\b" + cl + r"\b")
         regexps.append(regexp)
@@ -67,7 +71,7 @@ def getPackageDeps(lines, classes, package):
             if cl_re.search(line) != None:
                 cl = package + "." + classes[i]
                 if not cl in deps:
-                    deps.append(package + "." + classes[i])
+                    deps.append(package + classes[i])
     return deps
 
 def packageRoot(fname, package):
