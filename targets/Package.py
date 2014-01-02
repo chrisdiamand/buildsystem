@@ -1,3 +1,5 @@
+import os
+
 class Target: # Package
     def __init__(self, name, classes):
         assert(type(name) == str)
@@ -9,8 +11,10 @@ class Target: # Package
         self.classes = []
 
         for i in classes:
-            self.sources.append(self.path + "/" + i + ".java")
-            self.classes.append(builddir + "/" + self.path + "/" + i + ".class")
+            src = os.path.join(self.path, i + ".java")
+            self.sources.append(src)
+            cl = os.path.join(builddir, self.path, i + ".class")
+            self.classes.append(cl)
 
     def classList(self):
         return self.classes
