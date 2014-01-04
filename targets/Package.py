@@ -1,6 +1,7 @@
 import os
+import JClass
 
-class Target: # Package
+class Package(Target): # Package
     def __init__(self, name, classes):
         assert(type(name) == str)
         assert(type(classes) == list)
@@ -9,12 +10,26 @@ class Target: # Package
         self.path = name.replace(".", "/")
         self.sources = []
         self.classes = []
+        self.deps = []
 
         for i in classes:
-            src = os.path.join(self.path, i + ".java")
-            self.sources.append(src)
-            cl = os.path.join(builddir, self.path, i + ".class")
-            self.classes.append(cl)
+            if self.name != "":
+                i = "." + i
+            full_class = self.name + i
+            cl = JClass.JClass(full_class)
+            self.deps.append(cl)
+
+            src_path = os.path.join(self.path, i + ".java")
+            self.sources.append(src_path)
+            out_path = os.path.join(builddir, self.path, i + ".class")
+            self.classes.append(out_path)
+
+    # Return a list filenames which can be used as a make target
+    # to build this package.
+    def getMakeTarget(self):
+        # Depend on the classes in this package
+        targets = [i.getMakeTarget() for i in self.deps]
+        return " ".join(targets)
 
     def classList(self):
         return self.classes
@@ -23,27 +38,4 @@ class Target: # Package
         return self.sources
 
 def write_rule(fp):
-    # Copy all the source files to the build directory,
-    # using 'sed' to remove assertions if necessary.
-    fp.write(builddir + "/%.java: %.java\n")
-    fp.write("\t@mkdir -p $(@D)\n")
-    fp.write("ifeq ($(NDEBUG),)\n")
-    fp.write("\t@cp $< $@\n")
-    fp.write("else\n")
-    fp.write("\t@echo REMOVE_ASSERTS $<\n")
-    fp.write("\t@sed -e 's/^\s*assert.*;$$/{}/' $< > $@\n")
-    fp.write("endif\n\n")
-    # Rule to actually compile .java source files. The pipe operator
-    # means the directory has to exist, not be more recent.
-    fp.write(builddir + "/%.class: Build/%.java | "
-                           + builddir + "\n")
-    # Print a pretty message showing what we're doing
-    fp.write("\t@echo COMPILE $*.java\n");
-    fp.write("\t@javac -d " + builddir
-                                + " -sourcepath " + builddir
-                                + " -Xlint $<\n")
-    # Check the output file was actually created - the filename will
-    # be wrong if the package doesn't match the file path.
-    fp.write("\t@test -s $@ || { echo \"Error: $@ wasn't created.\"; "
-                + "echo \"Wrong package name?\"; exit 1; }\n")
-    fp.write("\n")
+    None

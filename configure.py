@@ -5,6 +5,12 @@ import sys
 
 builddir = "Build"
 
+class Target:
+    def gen(self, fp):
+        pass
+    def getMakeTarget(self):
+        pass
+
 # A python module used to write Makefile rules for
 # a particular target type e.g. Jars/C executables/etc.
 class BuildTarget:
@@ -14,7 +20,8 @@ class BuildTarget:
         # The python file containing the relevant classes
         self.fname = fname
 
-        self.module_globals = {"builddir": builddir}
+        self.module_globals = {"builddir"   :   builddir,
+                               "Target"     :   Target}
         # A helper function to write pattern rules
         self.write_rule = None
         # The class used by the 'project.py' script
@@ -25,7 +32,8 @@ class BuildTarget:
     def load(self):
         execfile(self.fname, self.module_globals)
         self.write_rule = self.module_globals["write_rule"]
-        self.decl_class = self.module_globals["Target"]
+        self.decl_class = self.module_globals[self.modulename]
+        assert super(self.decl_class) == Target
 
 # Look through the targets/ directory for scripts defining
 # target types. Return an array of BuildTarget instances.

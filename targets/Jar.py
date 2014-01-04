@@ -1,7 +1,7 @@
 import javadep
 import os
 
-class Target: # Jar
+class Jar(Target):
     def __init__(self, name, mainclass, packages, cp = []):
         assert(type(name) == str)
         assert(type(mainclass) == str)
