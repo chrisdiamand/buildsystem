@@ -5,12 +5,12 @@ class JClass(Target):
     # cl: a .-separated java class spec e.g. "uk.ac.cam.cd493.Something"
     # cp: a list of strings containing classpath entries
     def __init__(self, cl, cp = []):
-        self.jclass = src
+        self.jclass = cl
         # Path to the source (.java) file
-        self.srcpath = src.replace(".", "/") + ".java"
+        self.srcpath = cl.replace(".", "/") + ".java"
         # Path to the generated (.class) file
         self.outpath = os.path.join(builddir,
-                                    src.replace(".", "/") + ".class")
+                                    cl.replace(".", "/") + ".class")
         self.classpath = cp
         self.deps = []
 

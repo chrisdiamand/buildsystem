@@ -1,5 +1,4 @@
 import os
-import JClass
 
 class Package(Target): # Package
     def __init__(self, name, classes):
@@ -16,7 +15,7 @@ class Package(Target): # Package
             if self.name != "":
                 i = "." + i
             full_class = self.name + i
-            cl = JClass.JClass(full_class)
+            cl = JClass(full_class)
             self.deps.append(cl)
 
             src_path = os.path.join(self.path, i + ".java")
@@ -36,6 +35,3 @@ class Package(Target): # Package
 
     def sourceList(self):
         return self.sources
-
-def write_rule(fp):
-    None

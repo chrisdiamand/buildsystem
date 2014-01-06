@@ -1,6 +1,6 @@
 import os
 
-class Target: # Zip
+class Zip(Target):
     def __init__(self, fname, contents):
         assert type(fname) == str
         assert type(contents) == list
@@ -20,6 +20,3 @@ class Target: # Zip
 
         fp.write("REMOVE_FILES += " + self.fname+ "\n\n")
         return self.fname
-
-def write_rule(fp):
-    None

@@ -7,7 +7,7 @@ CPP_COMPILER = "clang"
 def to_c_obj(fname):
     return os.path.join(builddir, os.path.splitext(fname)[0] + ".o")
 
-class Target: # CProg
+class CProg(Target):
     CFLAGS = "-Wall -pedantic -g"
     CCFLAGS = CFLAGS
 
@@ -33,7 +33,7 @@ class Target: # CProg
         objlist = " ".join(self.obj)
         fp.write(self.name + ": " + objlist + "\n")
         fp.write("\t@echo LINK " + objlist + "\n")
-        fp.write("\t@$(CC) $(CFLAGS) -o $@ " + objlist)
+        fp.write("\t@" + C_COMPILER + " " + CFLAGS + " -o $@ " + objlist)
         if self.cpp:
             fp.write(" -lstdc++")
         fp.write("\n\n")
@@ -47,7 +47,8 @@ class Target: # CProg
 
         return self.name
 
-def write_rule(fp):
+if False:
+    #def write_rule(fp):
     fp.write("CC = " + C_COMPILER + "\n")
     fp.write("CPP = " + CPP_COMPILER + "\n")
     fp.write("CFLAGS = " + Target.CFLAGS + "\n")

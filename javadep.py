@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import os
@@ -44,7 +44,7 @@ def getOtherClassesInPackage(fname):
     thisClass = os.path.basename(fname)
     [thisClass, ext] = os.path.splitext(thisClass)
     if ext.lower() != ".java":
-        print "Error: Not a Java source file:", fname
+        print("Error: Not a Java source file:", fname)
         sys.exit(1)
     dirname = os.path.dirname(fname)
     if len(dirname) == 0: # Current directory
@@ -118,7 +118,7 @@ def main():
     deps = getDeps(args.infile)
     for i in deps:
         i = i.replace(".", "/")
-        print os.path.join(args.build_dir, i + ".java")
+        print(os.path.join(args.build_dir, i + ".java"))
 
 if __name__ == "__main__":
     main()

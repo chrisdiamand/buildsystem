@@ -87,6 +87,3 @@ class Jar(Target):
         fp.write("\n")
 
         return self.jarname;
-
-def write_rule(fp):
-    None

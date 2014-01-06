@@ -1,6 +1,6 @@
 import os
 
-class Target: # LaTeX
+class LaTeX(Target):
     def __init__(self, src, out = None):
         assert type(src) == str
         self.src = src
@@ -19,6 +19,3 @@ class Target: # LaTeX
 
         fp.write("REMOVE_FILES += " + self.out + "\n\n")
         return self.out
-
-def write_rule(fp):
-    None

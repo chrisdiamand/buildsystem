@@ -1,4 +1,4 @@
-class Target: # Custom rule
+class Custom(Target):
     def __init__(self, target, deps, rules):
         assert type(target) == str
         assert type(deps) == list
@@ -18,6 +18,3 @@ class Target: # Custom rule
         fp.write("REMOVE_FILES += " + self.target + "\n\n")
 
         return self.target
-
-def write_rule(fp):
-    None
