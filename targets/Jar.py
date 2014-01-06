@@ -31,6 +31,8 @@ class Jar(Target):
         assert(type(name) == str)
         assert(type(mainclass) == str)
         assert(type(packages) == list)
+        for p in packages:  assert type(p) == Package
+        for c in cp:        assert type(c) == str
 
         self.name = name;
         self.jarname = name + ".jar"
