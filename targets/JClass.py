@@ -43,7 +43,11 @@ class JClass(Target):
         # Print a message for each compiled file
         fp.write("\t@echo JAVAC " + src + "\n")
         # Compile it
-        fp.write("\t@javac -d " + builddir + " -Xlint " + src + "\n")
+        fp.write("\t@javac -d " + builddir)
+        fp.write(" -cp .")
+        for i in self.classpath:
+            fp.write(":" + i)
+        fp.write(" -Xlint " + src + "\n")
         # Check the output file was actually created - the filename will
         # be wrong if the package doesn't match the file path.
         fp.write("\t@test -s '" + out +

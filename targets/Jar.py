@@ -37,7 +37,12 @@ class Jar(Target):
         self.mainclass = mainclass
         self.packages = packages
         self.deps = [i for i in packages]
-        self.classpath = cp
+
+        self.classpath = []
+        for pkg in packages:
+            for cp in pkg.classpath:
+                if not cp in self.classpath:
+                    self.classpath.append(cp)
 
         man_path = os.path.join(builddir, "manifest_" + self.name + ".txt")
         self.manifest = Manifest(man_path, mainclass, cp)
