@@ -14,11 +14,14 @@ class JClass(Target):
         self.classpath = cp
         self.deps = []
 
+    def getMakeTarget(self):
+        return self.outpath
+
     # Get the source files it depends on and put then into a
     # space-separated list as the targets of a makefile rule.
     def srcDepList(self):
-        src_deps = javadeps.getDeps(src)
-        if len(deps) == 0:
+        src_deps = javadep.getDeps(self.srcpath)
+        if len(src_deps) == 0:
             return ""
 
         ret = ""
@@ -29,7 +32,7 @@ class JClass(Target):
         return ret
 
     def gen(self, fp):
-        out = self, outpath
+        out = self.outpath
         src = self.srcpath
 
         # Rule to actually compile .java source files. The pipe operator

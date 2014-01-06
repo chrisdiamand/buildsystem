@@ -12,9 +12,10 @@ class Package(Target): # Package
         self.deps = []
 
         for i in classes:
+            dot = ""
             if self.name != "":
-                i = "." + i
-            full_class = self.name + i
+                dot = "."
+            full_class = self.name + dot + i
             cl = JClass(full_class)
             self.deps.append(cl)
 
@@ -23,9 +24,14 @@ class Package(Target): # Package
             out_path = os.path.join(builddir, self.path, i + ".class")
             self.classes.append(out_path)
 
+    def gen(self, fp):
+        pass
+
     # Return a list filenames which can be used as a make target
     # to build this package.
     def getMakeTarget(self):
+        if self.deps == None:
+            return ""
         # Depend on the classes in this package
         targets = [i.getMakeTarget() for i in self.deps]
         return " ".join(targets)
