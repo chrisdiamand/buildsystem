@@ -1,7 +1,7 @@
 import os
 
 class Package(Target): # Package
-    def __init__(self, name, classes, cp = []):
+    def __init__(self, name, classes, cp = [], flags = None):
         assert type(name) == str
         assert type(classes) == list
         assert type(cp) == list
@@ -19,7 +19,7 @@ class Package(Target): # Package
             if self.name != "":
                 dot = "."
             full_class = self.name + dot + i
-            cl = JClass(full_class, cp = self.classpath)
+            cl = JClass(full_class, cp = self.classpath, flags = flags)
             self.deps.append(cl)
 
             src_path = os.path.join(self.path, i + ".java")

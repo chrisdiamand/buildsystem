@@ -4,7 +4,7 @@ import os
 class JClass(Target):
     # cl: a .-separated java class spec e.g. "uk.ac.cam.cd493.Something"
     # cp: a list of strings containing classpath entries
-    def __init__(self, cl, cp = []):
+    def __init__(self, cl, cp = [], flags = None):
         self.jclass = cl
         # Path to the source (.java) file
         self.srcpath = cl.replace(".", "/") + ".java"
@@ -13,6 +13,10 @@ class JClass(Target):
                                     cl.replace(".", "/") + ".class")
         self.classpath = cp
         self.deps = []
+        self.flags = flags
+
+        if self.flags == None:
+            self.flags = "-Xlint"
 
     def getMakeTarget(self):
         return self.outpath
@@ -47,7 +51,11 @@ class JClass(Target):
         fp.write(" -cp .")
         for i in self.classpath:
             fp.write(":" + i)
-        fp.write(" -Xlint " + src + "\n")
+        if self.flags != None:
+            assert type(self.flags) == str
+            if self.flags.strip() != "":
+                fp.write(" " + self.flags)
+        fp.write(" " + src + "\n")
         # Check the output file was actually created - the filename will
         # be wrong if the package doesn't match the file path.
         fp.write("\t@test -s '" + out +
