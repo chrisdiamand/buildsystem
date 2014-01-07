@@ -78,7 +78,8 @@ class Jar(Target):
             fp.write(" -C .. " + fname)
         # Include all class files from relevant packages
         for pkg in self.packages:
-            fp.write(" `find -path './" + pkg.path + "/*.class'`")
+            path = os.path.join(".", pkg.path, "*.class")
+            fp.write(" `find -path '" + path + "'`")
         fp.write("\n\t@chmod +x " + self.jarname + "\n\n");
 
         fp.write("REMOVE_FILES += " + " ".join(classes) + " "
