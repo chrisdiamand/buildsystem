@@ -97,6 +97,10 @@ def generate(target, outfile):
     else:
         target.__generated__ = True
     target.gen(outfile)
+    if not "deps" in target.__dict__:
+        print("Error: No such field `deps' in class",
+              target.__class__.__name__)
+        sys.exit(1)
     if target.deps == None:
         return
     for i in target.deps:
