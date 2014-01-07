@@ -2,8 +2,10 @@ import os
 
 class Package(Target): # Package
     def __init__(self, name, classes, cp = []):
-        assert(type(name) == str)
-        assert(type(classes) == list)
+        assert type(name) == str
+        assert type(classes) == list
+        assert type(cp) == list
+        for c in cp:    assert type(c) == str
 
         self.name = name
         self.path = name.replace(".", "/")
