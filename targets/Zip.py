@@ -5,7 +5,11 @@ class Zip(Target):
         assert type(fname) == str
         assert type(contents) == list
         self.fname = fname
+        self.deps = None
         self.contents = contents
+
+    def getMakeTarget(self):
+        return self.fname
 
     def gen(self, fp):
         fp.write(self.fname + ":")
