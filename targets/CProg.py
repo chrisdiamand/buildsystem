@@ -47,23 +47,23 @@ class CPPObject(ObjectFile):
         fp.write("\t@" + CPP_COMPILER + " " + self.flags)
         fp.write(" -c -o " + self.out + " " + self.src + "\n\n")
 
-def objectFile(src, cflags = None):
+def objectFile(src, flags = None):
     ext = os.path.splitext(src)[1].lower().strip()
     if ext == ".cpp" or ext == ".cc":
-        return CPPObject(src, flags = cflags)
-    return CObject(src, flags = cflags)
+        return CPPObject(src, flags = flags)
+    return CObject(src, flags = flags)
 
 class CProg(Target):
-    def __init__(self, name, sources, cflags = DEFAULT_CFLAGS):
+    def __init__(self, name, sources, flags = DEFAULT_CFLAGS):
         assert type(name) == str
         assert type(sources) == list
 
         self.name = name
         self.sources = sources
-        self.cflags = cflags
+        self.flags = flags
         self.deps = []
         for i in sources:
-            self.deps.append(objectFile(i, cflags))
+            self.deps.append(objectFile(i, flags))
 
         self.cpp = False
         for i in self.deps:
@@ -78,7 +78,7 @@ class CProg(Target):
         objlist = " ".join([i.out for i in self.deps])
         fp.write(self.name + ": " + objlist + "\n")
         fp.write("\t@echo LINK " + objlist + "\n")
-        fp.write("\t@" + C_COMPILER + " " + self.cflags + " -o $@ " + objlist)
+        fp.write("\t@" + C_COMPILER + " " + self.flags + " -o $@ " + objlist)
         if self.cpp:
             fp.write(" -lstdc++")
         fp.write("\n\n")
