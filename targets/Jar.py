@@ -1,4 +1,3 @@
-import javadep
 import os
 
 class Manifest(Target):
